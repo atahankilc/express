@@ -3,7 +3,7 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
-    "run": "node app.js",
+    "run": "node api/index.js",
     "start": "node ./bin/www"
   },
   "dependencies": {
