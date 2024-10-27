@@ -21,10 +21,8 @@ jobs:
       - name: Detect changed files
         id: changes
         run: |
-          # Değişiklik yapılan dosyaları bulalım
           CHANGED_FILES=$(git diff --name-only ${{ github.event.before }} ${{ github.sha }})
           echo "Changed files: $CHANGED_FILES"
-          # Değişiklikler varsa frontend ya da backend klasöründe olduğunu kontrol edelim
           if echo "$CHANGED_FILES" | grep -q '^frontend/'; then
             echo "frontend" >> $GITHUB_ENV
           elif echo "$CHANGED_FILES" | grep -q '^backend/'; then
