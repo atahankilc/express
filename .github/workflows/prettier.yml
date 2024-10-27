@@ -21,7 +21,7 @@ jobs:
       - name: Detect changed files
         id: changes
         run: |
-          CHANGED_FILES=$(git diff --name-only ${{ github.event.before }} ${{ github.sha }})
+          CHANGED_FILES=$(git diff --name-only HEAD^ HEAD)
           echo "Changed files: $CHANGED_FILES"
           if echo "$CHANGED_FILES" | grep -q '^frontend/'; then
             echo "frontend" >> $GITHUB_ENV
