@@ -16,28 +16,17 @@ jobs:
       - name: Set up Node.js
         uses: actions/setup-node@v3
         with:
-          node-version: '16' # Projenizdeki node sürümünü kullanın
+          node-version: '16'
 
-      - name: Detect changed files
-        id: changes
-        run: |
-          CHANGED_FILES=$(git diff --name-only HEAD^ HEAD)
-          echo "Changed files: $CHANGED_FILES"
-          if echo "$CHANGED_FILES" | grep -q '^frontend/'; then
-            echo "frontend" >> $GITHUB_ENV
-          elif echo "$CHANGED_FILES" | grep -q '^backend/'; then
-            echo "backend" >> $GITHUB_ENV
-          fi
-
-      - name: Run Prettier on Frontend
-        if: env.FRONTEND == 'frontend'
-        working-directory: ./frontend
-        run: |
-          npm install
-          npx prettier --check .
+      - uses: dorny/paths-filter@v3
+        id: changes_backend
+        with:
+          filters: |
+            src:
+              - 'backend/**'
 
       - name: Run Prettier on Backend
-        if: env.BACKEND == 'backend'
+        if: steps.changes_backend.outputs.src == 'true'
         working-directory: ./backend
         run: |
           npm install
