@@ -13,6 +13,11 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v3
 
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '20'
+
       - uses: dorny/paths-filter@v3
         id: changes_backend
         with:
@@ -28,15 +33,15 @@ jobs:
               - 'frontend/**'
 
       - name: Run Prettier on Backend
-        uses: creyD/prettier_action@v4.3
         if: steps.changes_backend.outputs.src == 'true'
-        with:
-          prettier_options: '--check 'backend/**/*''
-          github_token: ${{ secrets.GITHUB_TOKEN }}
+        working-directory: ./backend
+        run: |
+          npm install
+          npx prettier --check .
 
       - name: Run Prettier on Frontend
-        uses: creyD/prettier_action@v4.3
         if: steps.changes_frontend.outputs.src == 'true'
-        with:
-          prettier_options: '--check 'frontend/**/*''
-          github_token: ${{ secrets.GITHUB_TOKEN }}
+        working-directory: ./frontend
+        run: |
+          npm install
+          npx prettier --check .
