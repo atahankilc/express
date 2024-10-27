@@ -16,7 +16,7 @@ jobs:
       - name: Set up Node.js
         uses: actions/setup-node@v3
         with:
-          node-version: '16'
+          node-version: '20'
 
       - uses: dorny/paths-filter@v3
         id: changes_backend
@@ -25,9 +25,23 @@ jobs:
             src:
               - 'backend/**'
 
+      - uses: dorny/paths-filter@v3
+        id: changes_frontend
+        with:
+          filters: |
+            src:
+              - 'frontend/**'
+
       - name: Run Prettier on Backend
         if: steps.changes_backend.outputs.src == 'true'
         working-directory: ./backend
+        run: |
+          npm install
+          npx prettier --check .
+
+      - name: Run Prettier on Frontend
+        if: steps.changes_frontend.outputs.src == 'true'
+        working-directory: ./frontend
         run: |
           npm install
           npx prettier --check .
